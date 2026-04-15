@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Määrällinen tutkimus — FinnEM Akatemia 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css" id="theme">
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<style>
+/* ============================================================
+   CUSTOM THEME — Dark gradient, glassmorphism, FinnEM branding
+   ============================================================ */
+:root {
+  --bg-from: #0f172a;
+  --bg-to: #1e1b4b;
+  --accent-blue: #1B4F8A;
+  --accent-teal: #0D9488;
+  --accent-orange: #f97316;
+  --accent-red: #e11d48;
+  --accent-purple: #7C3AED;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.1);
+  --glass-bg-hover: rgba(255,255,255,0.1);
+}
+
+.reveal-viewport {
+  background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%) !important;
+}
+
+.reveal {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 26px;
+  color: var(--text-primary);
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+  font-family: 'Fraunces', serif;
+  color: #fff;
+  text-transform: none;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-shadow: none;
+}
+
+.reveal h1 { font-size: 2.6em; font-weight: 700; }
+.reveal h2 { font-size: 1.55em; font-weight: 600; margin-bottom: 0.5em; }
+.reveal h3 { font-size: 1.2em; font-weight: 600; }
+
+.reveal p, .reveal li {
+  line-height: 1.65;
+  color: var(--text-primary);
+}
+
+.reveal ul { list-style: none; padding-left: 0; }
+.reveal ul li::before {
+  content: "\25B8";
+  color: var(--accent-teal);
+  font-weight: 700;
+  display: inline-block;
+  width: 1.2em;
+  margin-left: 0;
+}
+.reveal ol { padding-left: 1.4em; }
+.reveal ol li { margin-bottom: 0.35em; }
+.reveal ol li::marker { color: var(--accent-orange); font-weight: 700; }
+
+.reveal a {
+  color: var(--accent-teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.reveal a:hover { color: #5eead4; }
+
+/* Slide numbers */
+.reveal .slide-number {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-muted);
+  background: transparent;
+  right: 20px; bottom: 12px;
+}
+
+/* Glass card */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+.glass-card:hover { background: var(--glass-bg-hover); }
+
+/* Two-column layout helper */
+.cols { display: flex; gap: 40px; align-items: flex-start; }
+.cols > .col { flex: 1; }
+.cols > .col-40 { flex: 0 0 40%; }
+.cols > .col-60 { flex: 0 0 58%; }
+.cols > .col-50 { flex: 0 0 48%; }
+
+/* Caption text */
+.fig-caption {
+  font-size: 0.58em;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Interactive controls */
+.controls-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.controls-row label {
+  font-size: 0.62em;
+  color: var(--text-secondary);
+  margin-right: 4px;
+  font-weight: 500;
+}
+
+.pill-btn {
+  display: inline-block;
+  padding: 5px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  font-size: 0.58em;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.pill-btn:hover { background: var(--glass-bg-hover); border-color: var(--accent-teal); }
+.pill-btn.active {
+  background: var(--accent-teal);
+  border-color: var(--accent-teal);
+  color: #fff;
+  font-weight: 600;
+}
+.pill-btn.active-blue {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: #fff;
+  font-weight: 600;
+}
+
+.pill-select {
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--glass-border);
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+  font-size: 0.58em;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.pill-select option { background: #1e293b; color: #f1f5f9; }
+
+/* Slider */
+.range-wrap {
+  display: flex; align-items: center; gap: 10px;
+}
+.range-wrap input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 160px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+  outline: none;
+}
+.range-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+.range-val {
+  font-size: 0.58em;
+  color: var(--accent-teal);
+  font-weight: 600;
+  min-width: 24px;
+}
+
+/* Toggle switch */
+.toggle-wrap {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.58em; color: var(--text-secondary);
+}
+.toggle-switch {
+  position: relative; width: 40px; height: 22px;
+  background: rgba(255,255,255,0.15); border-radius: 11px;
+  cursor: pointer; transition: background 0.3s;
+}
+.toggle-switch.on { background: var(--accent-teal); }
+.toggle-switch::after {
+  content: ''; position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  background: #fff; border-radius: 50%;
+  transition: transform 0.3s;
+}
+.toggle-switch.on::after { transform: translateX(18px); }
+
+/* Section title slides */
+.section-slide {
+  text-align: center;
+}
+.section-slide h2 {
+  font-size: 2em;
+  margin-bottom: 0.3em;
+}
+
+/* Image styling */
+.reveal img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+.reveal .no-shadow img,
+.reveal img.no-shadow {
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* SVG chart area */
+.chart-container {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.chart-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Title slide special */
+.title-slide h1 {
+  font-size: 3em;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.title-slide .subtitle {
+  font-size: 1.1em;
+  color: var(--text-secondary);
+  font-weight: 300;
+  margin-top: 0.2em;
+}
+
+/* Animated gradient bg for title */
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.title-bg {
+  background: linear-gradient(135deg, #0f172a, #1e1b4b, #0f172a, #1B4F8A30);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+}
+
+/* Dropbox card button */
+.dropbox-card {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(0,97,254,0.15), rgba(0,97,254,0.05));
+  border: 1.5px solid rgba(0,97,254,0.3);
+  border-radius: 16px;
+  padding: 28px 40px;
+  text-decoration: none !important;
+  transition: all 0.3s ease;
+  max-width: 600px;
+}
+.dropbox-card:hover {
+  background: linear-gradient(135deg, rgba(0,97,254,0.25), rgba(0,97,254,0.1));
+  border-color: rgba(0,97,254,0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,97,254,0.2);
+}
+.dropbox-card .icon { font-size: 2em; margin-bottom: 12px; }
+.dropbox-card .label {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+}
+.dropbox-card .link-text {
+  font-size: 0.62em;
+  color: #60a5fa;
+  word-break: break-all;
+  margin-top: 8px;
+}
+
+/* QR code images */
+.qr-img { border-radius: 12px !important; background: #fff; padding: 8px; }
+
+/* Cross-table */
+.cross-table {
+  border-collapse: collapse;
+  margin: 16px auto;
+  font-size: 0.72em;
+}
+.cross-table th, .cross-table td {
+  padding: 10px 20px;
+  border: 1px solid rgba(255,255,255,0.15);
+  text-align: center;
+}
+.cross-table th {
+  background: rgba(255,255,255,0.08);
+  font-weight: 600;
+  color: var(--accent-teal);
+}
+.cross-table td { color: var(--text-primary); }
+
+/* P-value reveal */
+.p-value-box {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-family: 'Inter', monospace;
+  font-size: 0.75em;
+  font-weight: 700;
+  margin-top: 12px;
+  transition: all 0.5s ease;
+}
+.p-value-box.hidden-val {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-muted);
+  border: 1.5px dashed var(--glass-border);
+}
+.p-value-box.shown-val {
+  background: rgba(220,38,38,0.15);
+  color: #fca5a5;
+  border: 1.5px solid rgba(220,38,38,0.4);
+}
+
+/* Quote */
+blockquote {
+  border-left: 4px solid var(--accent-teal);
+  padding: 16px 24px;
+  margin: 0;
+  background: var(--glass-bg);
+  border-radius: 0 12px 12px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.8em;
+  font-style: normal;
+  color: var(--text-muted);
+}
+
+/* Full-image slide */
+.full-img { text-align: center; }
+.full-img img {
+  max-height: 580px;
+  width: auto;
+  margin: 0 auto;
+}
+
+/* Tehtava accent */
+.tehtava-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75em;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+/* Subtitle aliases */
+.aka {
+  font-size: 0.65em;
+  color: var(--text-muted);
+  margin-top: -0.3em;
+  margin-bottom: 0.6em;
+}
+
+/* SVG text defaults for dark theme */
+.chart-container text { fill: var(--text-secondary); }
+.chart-container .axis text { fill: var(--text-secondary); }
+.chart-container .axis line,
+.chart-container .axis path { stroke: rgba(255,255,255,0.2); }
+
+/* Ensure controls don't get clipped */
+.reveal section { overflow: visible; }
+
+/* Hide Reveal's default progress bar - we use slide numbers */
+.reveal .progress { display: none !important; }
+
+/* Responsive images in columns */
+.cols img { max-width: 100%; height: auto; }
+
+/* Stick figure custom styling */
+.stick-figure-wrap { position: relative; }
+
+/* Vertical centering fix for slide content */
+.reveal .slides section {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-top: 30px !important;
+}
+
+/* ============================================================
+   LIGHT MODE THEME
+   ============================================================ */
+.light-mode .reveal-viewport,
+.light-mode.reveal-viewport {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+}
+.light-mode .reveal, .light-mode .reveal p, .light-mode .reveal li {
+  color: #1e293b;
+}
+.light-mode .reveal h1, .light-mode .reveal h2, .light-mode .reveal h3 {
+  color: #0f172a;
+}
+.light-mode .fig-caption { color: #64748b; }
+.light-mode .glass-card {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.1);
+}
+.light-mode .pill-btn {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.15);
+  color: #1e293b;
+}
+.light-mode .pill-btn.active { background: var(--accent-teal); color: #fff; }
+.light-mode .pill-select {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.15);
+  color: #1e293b;
+}
+.light-mode .controls-row label { color: #475569; }
+.light-mode .toggle-wrap { color: #475569; }
+.light-mode .range-wrap input[type="range"] { background: rgba(0,0,0,0.15); }
+</style>
+</head>
+<body>
+
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================
+     SLIDE 1: TITLE
+     ============================================================ -->
+<section class="title-bg">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%;">
+    <div class="title-slide">
+      <h1>Määrällinen tutkimus</h1>
+      <p class="subtitle">FinnEM Akatemia Workshop 2026</p>
+      <div style="margin-top:40px;">
+        <span style="display:inline-block;width:60px;height:3px;background:var(--accent-teal);border-radius:2px;margin:0 6px;"></span>
+        <span style="display:inline-block;width:30px;height:3px;background:var(--accent-blue);border-radius:2px;margin:0 6px;"></span>
+        <span style="display:inline-block;width:20px;height:3px;background:var(--accent-orange);border-radius:2px;margin:0 6px;"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2: DROPBOX LINK
+     ============================================================ -->
+<section>
+  <h2>Materiaalit</h2>
+  <div style="text-align:center;margin-top:40px;">
+    <a href="https://www.dropbox.com/scl/fo/d4514juu76yqsqk4ko0ia/ABNPErqO6y0MBdUS7B55_jg?rlkey=91oa9n9oawfzs8fqq6490rid8&dl=0" target="_blank" class="dropbox-card">
+      <div class="icon">&#128193;</div>
+      <div style="font-size:1em;font-weight:600;color:#fff;">Avaa Dropbox-kansio</div>
+      <div class="label">Workshop-materiaalit, data ja posteripohja</div>
+      <div class="link-text">dropbox.com/scl/fo/d4514juu76yqsqk4ko0ia/...</div>
+    </a>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3: TAVOITE
+     ============================================================ -->
+<section>
+  <h2>Määrällinen tutkimus</h2>
+  <h3 style="color:var(--accent-teal);">Tavoite:</h3>
+  <div class="cols" style="margin-top:20px;">
+    <div class="col-40">
+      <div class="glass-card">
+        <p>Arvioida kahden tekijän välistä:</p>
+        <ul>
+          <li class="fragment"><strong>suhdetta</strong></li>
+          <li class="fragment">sen <strong>suuruutta</strong></li>
+          <li class="fragment">ja <strong>merkitystä</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-60" style="text-align:center;">
+      <img src="images/maarallinen_tutkimus.png" alt="Määrällinen tutkimus">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4: TEHTAVA 1
+     ============================================================ -->
+<section>
+  <h2 style="color:var(--accent-orange);">Tehtävä 1</h2>
+  <div class="cols" style="margin-top:16px;">
+    <div class="col-50">
+      <div class="glass-card">
+        <ol>
+          <li>Tutki käytössä olevaa dataa<br>
+            <a href="https://hyeenus.github.io/ed-flow-dashboard/" target="_blank" style="font-size:0.82em;">hyeenus.github.io/ed-flow-dashboard</a>
+          </li>
+          <li>Valitse kaksi asiaa joiden yhteyttä haluat tutkia</li>
+          <li>Luo hypoteesi ja tavoite tutkimukselle<br>
+            <span style="color:var(--accent-orange);font-weight:600;">&#8594; Kirjaa ne posteriin</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-50" style="text-align:center;">
+      <a href="https://hyeenus.github.io/ed-flow-dashboard/" target="_blank">
+        <img src="images/ed_flow_v2_qr_code.png" alt="ED Flow QR" class="qr-img" style="width:280px;">
+      </a>
+      <p style="font-size:0.55em;color:var(--text-muted);margin-top:8px;">Päivystyksen potilasvirtaanalyysi</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5: MITATTAVAT MUUTTUJAT
+     ============================================================ -->
+<section>
+  <h2>Mitattavat muuttujat</h2>
+  <div class="cols" style="margin-top:16px;">
+    <div class="col-40">
+      <div class="glass-card">
+        <p>Mitattavan muuttujan tyyppi vaikuttaa merkittävästi lähestymistapaan</p>
+        <ul>
+          <li class="fragment"><strong style="color:var(--accent-blue);">Luokitteleva</strong></li>
+          <li class="fragment"><strong style="color:var(--accent-purple);">Järjestys</strong></li>
+          <li class="fragment"><strong style="color:var(--accent-teal);">Jatkuva</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-60" style="text-align:center;">
+      <img src="images/muuttujatyypit.png" alt="Muuttujatyypit">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 6: LUOKITTELEVA
+     ============================================================ -->
+<section>
+  <h2>Luokitteleva</h2>
+  <p class="aka">(aka kategorinen, faktori, laatueroasteikko)</p>
+  <div class="cols">
+    <div class="col-50">
+      <ul>
+        <li class="fragment">Selvät kategoriat</li>
+        <li class="fragment">Esim. sukupuoli, saapumistapa</li>
+        <li class="fragment">Ei välimuotoja</li>
+        <li class="fragment">Tunnusluku: <strong>Moodi</strong></li>
+      </ul>
+    </div>
+    <div class="col-50" style="text-align:center;">
+      <img src="images/luokitteleva_muuttuja.png" alt="Luokitteleva muuttuja">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 7: BINAARI
+     ============================================================ -->
+<section>
+  <h2>Binääri</h2>
+  <p class="aka">(aka. binomiaalinen, looginen, boolean, bivariaatti, tosiarvo)</p>
+  <div class="cols">
+    <div class="col-40">
+      <ul>
+        <li class="fragment">Luokittelevan erityistapaus</li>
+        <li class="fragment">Vain yksi kahdesta arvosta</li>
+        <li class="fragment">Osastohoito / Kotiutus</li>
+        <li class="fragment">Kyllä / Ei</li>
+        <li class="fragment">0 / 1</li>
+      </ul>
+    </div>
+    <div class="col-60" style="text-align:center;">
+      <img src="images/binaari_muuttuja.webp" alt="Binääri muuttuja">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 8: ORDINAALI
+     ============================================================ -->
+<section>
+  <h2>Ordinaali</h2>
+  <p class="aka">(aka. järjestysmuuttuja)</p>
+  <div class="cols">
+    <div class="col-40">
+      <ul>
+        <li class="fragment">Luokitteleva jolla järjestys</li>
+        <li class="fragment">Askel ei tarvitse olla sama</li>
+        <li class="fragment">Luokittelevan ja jatkuvan välimuoto</li>
+        <li class="fragment">Esim. ESI 1-5</li>
+        <li class="fragment">Tunnuslukuja: <strong>moodi</strong>, <strong>mediaani</strong></li>
+      </ul>
+    </div>
+    <div class="col-60" style="text-align:center;">
+      <img src="images/ordinaali.png" alt="Ordinaali">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9: JATKUVA
+     ============================================================ -->
+<section>
+  <h2>Jatkuva</h2>
+  <p class="aka">(aka. skalaari, mitta-asteikko)</p>
+  <div class="cols">
+    <div class="col-40">
+      <ul>
+        <li class="fragment">Minkä hyvänsä lukuarvon</li>
+        <li class="fragment">Esim. ikä, syke, verenpaine</li>
+        <li class="fragment">Tunnuslukuja: <strong>moodi</strong>, <strong>mediaani</strong>, <strong>keskiarvo</strong></li>
+      </ul>
+    </div>
+    <div class="col-60" style="text-align:center;">
+      <img src="images/jatkuva_muuttuja.png" alt="Jatkuva muuttuja">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 10: TILASTO NINJA
+     ============================================================ -->
+<section>
+  <h2 style="color:var(--accent-orange);">Tilasto Ninja</h2>
+  <div class="cols" style="margin-top:16px;">
+    <div class="col-50">
+      <div class="glass-card">
+        <p>Kokeile taitojasi muuttujatyyppien lajittelussa <strong>Tilasto Ninja Pelin Taso 1</strong>:llä.</p>
+        <p style="margin-top:12px;">Kirjoita huippupisteet ja nimimerkki taululle.</p>
+        <p style="margin-top:16px;">
+          <a href="https://hyeenus.github.io/tilasto-ninja/" target="_blank" style="font-size:0.85em;">hyeenus.github.io/tilasto-ninja</a>
+        </p>
+      </div>
+    </div>
+    <div class="col-50" style="text-align:center;">
+      <a href="https://hyeenus.github.io/tilasto-ninja/" target="_blank">
+        <img src="images/tilasto_ninja_qr_code.png" alt="Tilasto Ninja QR" class="qr-img" style="width:280px;">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 11: KUVAAJAT SECTION
+     ============================================================ -->
+<section class="section-slide">
+  <h2 style="font-size:2.2em;margin-bottom:0.6em;">Kuvaajat</h2>
+  <blockquote>
+    "The greatest value of a picture is when it forces us to notice what we never expected to see."
+    <cite>— John Tukey, amerikkalainen tilastotieteilijä</cite>
+  </blockquote>
+</section>
+
+<!-- ============================================================
+     SLIDE 12: PYLVASKUVAAJA
+     ============================================================ -->
+<section>
+  <h2>Pylväskuvaaja — yksi luokitteleva muuttuja</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Pylväskuvaaja näyttää havaintojen jakautumisen luokkiin.
+  </p>
+  <div class="controls-row">
+    <label>Näytä:</label>
+    <span class="pill-btn active" data-chart="barchart" data-value="count">Lukumäärä</span>
+    <span class="pill-btn" data-chart="barchart" data-value="pct">Prosentti</span>
+  </div>
+  <div class="chart-container" id="barchart"></div>
+  <p class="fig-caption">Saapumistapa päivystykseen (N = 800).</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 13: PINOTTU PYLVASKUVAAJA
+     ============================================================ -->
+<section>
+  <h2>Pinottu pylväskuvaaja — kaksi luokittelevaa</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    ESI-luokka &times; hoidon lopputulos.
+  </p>
+  <div class="controls-row">
+    <label>Näytä:</label>
+    <span class="pill-btn" data-chart="stackbar" data-value="count">Lukumäärä</span>
+    <span class="pill-btn active" data-chart="stackbar" data-value="pct">Prosentti</span>
+  </div>
+  <div class="chart-container" id="stackbar"></div>
+  <p class="fig-caption">ESI-triageluokka &times; hoidon lopputulos (N = 800).</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 14: LAATIKKOKUVIO ANATOMY
+     ============================================================ -->
+<section>
+  <h2>Laatikkokuvio — jatkuva muuttuja</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    60 aikuista pituusjärjestyksessä. Miten jakauma tiivistetään laatikkokuvioksi?
+  </p>
+  <div class="controls-row">
+    <label>Vaihe:</label>
+    <span class="pill-btn active-blue" data-chart="boxanat" data-value="0">1. Järjestys</span>
+    <span class="pill-btn" data-chart="boxanat" data-value="1">2. Mediaani</span>
+    <span class="pill-btn" data-chart="boxanat" data-value="2">3. Kvartiilit</span>
+    <span class="pill-btn" data-chart="boxanat" data-value="3">4. Viikset</span>
+    <span class="pill-btn" data-chart="boxanat" data-value="4">5. Outlierit</span>
+  </div>
+  <div class="chart-container" id="boxanat"></div>
+  <p style="font-size: 0.45em; color: var(--text-muted); margin-top: 4px;">Outlier R:ss&auml;: arvo &lt; Q1 &minus; 1.5 &times; IQR &nbsp;tai&nbsp; arvo &gt; Q3 + 1.5 &times; IQR</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 15: LAATIKKOKUVIO - JATKUVA x LUOKITTELEVA
+     ============================================================ -->
+<section>
+  <h2>Laatikkokuvio — jatkuva &times; luokitteleva</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Näkyykö saapumistavan ja jatkuvan muuttujan välillä ero?
+  </p>
+  <div class="controls-row">
+    <label>Muuttuja:</label>
+    <select class="pill-select" id="boxvar-select">
+      <option value="ika" selected>Ikä (v)</option>
+      <option value="syke">Syke (bpm)</option>
+      <option value="systolinen">Syst. RR (mmHg)</option>
+      <option value="hengitystaajuus">Heng.taaj. (/min)</option>
+    </select>
+  </div>
+  <div class="chart-container" id="boxvar"></div>
+  <p class="fig-caption">Saapumistapa &times; valittu muuttuja (N = 800).</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 16: HISTOGRAMMI - IKA
+     ============================================================ -->
+<section>
+  <h2>Histogrammi — yksi jatkuva muuttuja</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Pylvään korkeus = havaintojen lukumäärä. Hyvä jakauman hahmottamiseen.
+  </p>
+  <div class="controls-row">
+    <label>Pylväitä:</label>
+    <div class="range-wrap">
+      <input type="range" id="hist-age-bins" min="5" max="50" value="20">
+      <span class="range-val" id="hist-age-bins-val">20</span>
+    </div>
+  </div>
+  <div class="chart-container" id="hist-age"></div>
+  <p class="fig-caption">Päivystyspotilaiden ikäjakauma (N = 800).</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 17: HISTOGRAMMI - NORMAALIJAKAUMA
+     ============================================================ -->
+<section>
+  <h2>Histogrammi — normaalijakauma</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Kun arvot jakautuvat symmetrisesti keskiarvon ympärille. Keskiarvo &asymp; mediaani.
+  </p>
+  <div class="chart-container" id="hist-normal"></div>
+  <p class="fig-caption">Aikuisten pituusjakauma (N = 300, simuloitu). Punainen käyrä = teoreettinen normaalijakauma.</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 18: HISTOGRAMMI - KAKSIHUIPPUINEN
+     ============================================================ -->
+<section>
+  <h2>Histogrammi — kaksihuippuinen jakauma</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Histogrammi voi paljastaa piileviä alaryhmiä.
+  </p>
+  <div class="chart-container" id="hist-bimodal"></div>
+  <p class="fig-caption">Potilaiden syke päivystyksessä (N &asymp; 340, simuloitu). Kaksihuippuisen jakauman vuoksi kumpikaan keskiluku ei kuvaa ryhmää hyvin.</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 19: HISTOGRAMMI - PUUTTUVAT ARVOT
+     ============================================================ -->
+<section>
+  <h2>Histogrammi — puuttuvien arvojen tunnistaminen</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Histogrammi paljastaa datan laadun ongelmat.
+  </p>
+  <div class="chart-container" id="hist-missing"></div>
+  <p class="fig-caption">Systolinen verenpaine (N = 200, simuloitu).</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 20: HISTOGRAMMI - VINOUTUNUT
+     ============================================================ -->
+<section>
+  <h2>Histogrammi — vinoutunut jakauma</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Oikealle vino jakauma: pitkä häntä suuriin arvoihin. Mediaani kuvaa tyypillistä arvoa paremmin.
+  </p>
+  <div class="chart-container" id="hist-skewed"></div>
+  <div class="controls-row" style="margin-top:8px;">
+    <label>Vasteaika (min):</label>
+    <input type="number" id="skewed-add-value" value="180" min="1" max="500" step="1" style="width:70px;padding:4px 8px;border-radius:999px;border:1.5px solid var(--glass-border);background:rgba(255,255,255,0.08);color:var(--text-primary);font-size:0.58em;font-family:Inter,sans-serif;text-align:center;">
+    <span class="pill-btn" id="skewed-add-btn" style="cursor:pointer;">Lis&auml;&auml; yksil&ouml;</span>
+    <span id="skewed-n-count" style="font-size:0.58em;color:var(--text-secondary);margin-left:8px;"></span>
+  </div>
+  <p class="fig-caption">Ensihoidon vasteajat. Mediaani (Md) kuvaa tyypillistä vasteaikaa paremmin kuin keskiarvo.</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 21: HAJONTAKUVIO
+     ============================================================ -->
+<section>
+  <h2>Hajontakuvio — kaksi jatkuvaa muuttujaa</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Jokainen piste = yksi potilas.
+  </p>
+  <div class="controls-row">
+    <label>Väritys:</label>
+    <select class="pill-select" id="scatter-color-select">
+      <option value="jatkotoimenpide" selected>Hoidon lopputulos</option>
+      <option value="esi">ESI-luokka</option>
+      <option value="saapumistapa">Saapumistapa</option>
+    </select>
+    <div class="toggle-wrap" style="margin-left:16px;">
+      <span>Regressiosuora</span>
+      <div class="toggle-switch" id="scatter-reg-toggle"></div>
+    </div>
+  </div>
+  <div class="chart-container" id="scatter" style="max-width:820px;"></div>
+  <p class="fig-caption">Ikä &times; systolinen verenpaine (N &asymp; 200). Regressiosuora näyttää ryhmien eron.</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 22: HOIDON LOPPUTULOS ERI RYHMISSA
+     ============================================================ -->
+<section>
+  <h2>Hoidon lopputulos eri ryhmissä</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:8px;">
+    Miten osastohoitoon otettujen osuus vaihtelee ryhmittäin?
+  </p>
+  <div class="controls-row">
+    <label>Ryhmittely:</label>
+    <span class="pill-btn active" data-chart="outcome" data-value="esi">ESI-luokka</span>
+    <span class="pill-btn" data-chart="outcome" data-value="saapumistapa">Saapumistapa</span>
+    <span class="pill-btn" data-chart="outcome" data-value="sukupuoli">Sukupuoli</span>
+    <span class="pill-btn" data-chart="outcome" data-value="viikonpaiva">Viikonpäivä</span>
+  </div>
+  <div class="chart-container" id="outcome"></div>
+</section>
+
+<!-- ============================================================
+     SLIDE 23: TEHTAVA 2
+     ============================================================ -->
+<section>
+  <h2 style="color:var(--accent-orange);">Tehtävä 2</h2>
+  <div class="cols" style="margin-top:16px;">
+    <div class="col-60">
+      <div class="glass-card">
+        <ol>
+          <li>Tutki muuttujiesi välistä yhteyttä kuvaajien avulla<br>
+            <a href="https://hyeenus.github.io/ed-flow-dashboard/" target="_blank" style="font-size:0.82em;">hyeenus.github.io/ed-flow-dashboard</a>
+          </li>
+          <li>Valitse sopivin kuvaaja muuttujatyyppien perusteella</li>
+          <li>Kirjaa havainnot ja kuvaaja posteriin</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-40" style="text-align:center;">
+      <a href="https://hyeenus.github.io/ed-flow-dashboard/" target="_blank">
+        <img src="images/ed_flow_v2_qr_code.png" alt="QR" class="qr-img" style="width:200px;">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 24: MENETELMAT SECTION
+     ============================================================ -->
+<section class="section-slide">
+  <h2 style="font-size:2.2em;">Menetelmät</h2>
+  <p style="color:var(--text-muted);font-size:0.8em;margin-top:16px;">Tilastollinen testaus</p>
+</section>
+
+<!-- ============================================================
+     SLIDE 25: CHI2 TESTI
+     ============================================================ -->
+<section>
+  <h2>Osuuksien vertailu (&chi;&sup2;-testi)</h2>
+  <p style="font-size:0.68em;color:var(--text-secondary);margin-bottom:12px;">
+    Onko saapumistavan ja lopputuloksen välillä yhteys?
+  </p>
+  <table class="cross-table">
+    <tr><th></th><th>Osastohoito</th><th>Kotiutus</th><th>Yhteensä</th></tr>
+    <tr><td style="font-weight:600;">Ambulanssi</td><td>134 (52%)</td><td>122 (48%)</td><td>256</td></tr>
+    <tr><td style="font-weight:600;">Kävellen</td><td>26 (15%)</td><td>144 (85%)</td><td>170</td></tr>
+    <tr><td style="font-weight:600;color:var(--text-muted);">Yhteensä</td><td>160 (38%)</td><td>266 (62%)</td><td>426</td></tr>
+  </table>
+  <div style="text-align:center;margin-top:16px;">
+    <span class="pill-btn" id="chi2-reveal-btn" onclick="revealPvalue()" style="cursor:pointer;">Näytä p-arvo</span>
+    <div style="margin-top:12px;">
+      <span class="p-value-box hidden-val" id="chi2-pval">???</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 26: KESKIARVOJEN VERTAILU
+     ============================================================ -->
+<section>
+  <h2>Keskiarvojen vertailu</h2>
+  <div class="cols" style="margin-top:16px;">
+    <div class="col-50">
+      <ul>
+        <li class="fragment">Normaalijakautuneen jatkuvan muuttujan vertailu ryhmien välillä</li>
+        <li class="fragment"><strong>t-testi</strong> — kahden ryhmän vertailu</li>
+        <li class="fragment"><strong>ANOVA</strong> — useamman ryhmän vertailu</li>
+        <li class="fragment">Edellyttää normaalijakaumaa</li>
+      </ul>
+    </div>
+    <div class="col-50" style="text-align:center;">
+      <img src="images/normaalijakauma.webp" alt="Normaalijakauma">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 27: EI NORMAALI
+     ============================================================ -->
+<section>
+  <h2>Jos aineisto ei ole normaalisti jakautunut</h2>
+  <div class="cols" style="margin-top:16px;">
+    <div class="col-50">
+      <ul>
+        <li class="fragment">Käytetään <strong>ei-parametrisia</strong> testejä</li>
+        <li class="fragment"><strong>Mann-Whitney U</strong> — kahden ryhmän vertailu</li>
+        <li class="fragment"><strong>Kruskal-Wallis</strong> — useamman ryhmän vertailu</li>
+        <li class="fragment">Perustuu järjestyslukuihin, ei keskiarvoihin</li>
+      </ul>
+    </div>
+    <div class="col-50" style="text-align:center;">
+      <img src="images/ei_normaali_jakauma.png" alt="Ei-normaali jakauma">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 28: TEHTAVA 3
+     ============================================================ -->
+<section>
+  <h2 style="color:var(--accent-orange);">Tehtävä 3</h2>
+  <div class="cols" style="margin-top:16px;">
+    <div class="col-60">
+      <div class="glass-card">
+        <ol>
+          <li>Päätä millaisia muuttujia vertaat</li>
+          <li>Valitse sopivin tilastollinen testi</li>
+          <li>Aja testi ja kirjaa tulokset posteriin<br>
+            <a href="https://hyeenus.github.io/ed-flow-dashboard/" target="_blank" style="font-size:0.82em;">hyeenus.github.io/ed-flow-dashboard</a>
+          </li>
+          <li>Tulkitse tulos: onko yhteys tilastollisesti merkitsevä?</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-40" style="text-align:center;">
+      <a href="https://hyeenus.github.io/ed-flow-dashboard/" target="_blank">
+        <img src="images/ed_flow_v2_qr_code.png" alt="QR" class="qr-img" style="width:200px;">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 29: TESTIN VALINTA
+     ============================================================ -->
+<section class="full-img">
+  <h2>Tilastollisen testin valinta</h2>
+  <img src="images/testin_valinta-01.png" alt="Testin valinta">
+</section>
+
+<!-- ============================================================
+     SLIDE 30: KUMMUSNIEMI KARTTA
+     ============================================================ -->
+<section class="full-img">
+  <img src="images/kummusniemi_kartta_2026.png" alt="Kummusniemi kartta 2026" style="max-height:620px;">
+</section>
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script>
+/* ================================================================
+   PRNG & HELPERS (identical to Quarto version)
+   ================================================================ */
+function prng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function randN(rng,mu,sigma){let u;do{u=rng();}while(u===0);return mu+sigma*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rng());}
+const meanFn=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const medianFn=a=>{const s=[...a].sort((x,y)=>x-y),m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;};
+
+/* ================================================================
+   PILL BUTTON TOGGLE LOGIC
+   ================================================================ */
+document.querySelectorAll('.pill-btn[data-chart]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const chart = this.dataset.chart;
+    document.querySelectorAll(`.pill-btn[data-chart="${chart}"]`).forEach(b => {
+      b.classList.remove('active','active-blue');
+    });
+    if (chart === 'boxanat') {
+      this.classList.add('active-blue');
+    } else {
+      this.classList.add('active');
+    }
+    // Trigger chart redraw
+    if (chart === 'barchart') drawBarChart(this.dataset.value);
+    if (chart === 'stackbar') drawStackBar(this.dataset.value);
+    if (chart === 'boxanat') drawBoxAnatomy(parseInt(this.dataset.value));
+    if (chart === 'outcome') drawOutcome(this.dataset.value);
+  });
+});
+
+/* Toggle switch logic */
+document.querySelectorAll('.toggle-switch').forEach(sw => {
+  sw.addEventListener('click', function() {
+    this.classList.toggle('on');
+    if (this.id === 'scatter-reg-toggle') drawScatter();
+  });
+});
+
+/* Select change events */
+document.getElementById('boxvar-select').addEventListener('change', function(){ drawBoxVar(this.value); });
+document.getElementById('scatter-color-select').addEventListener('change', function(){ drawScatter(); });
+
+/* Slider */
+const binSlider = document.getElementById('hist-age-bins');
+const binVal = document.getElementById('hist-age-bins-val');
+binSlider.addEventListener('input', function(){
+  binVal.textContent = this.value;
+  drawHistAge(parseInt(this.value));
+});
+
+/* ================================================================
+   CHI2 P-VALUE REVEAL
+   ================================================================ */
+function revealPvalue() {
+  const box = document.getElementById('chi2-pval');
+  box.textContent = 'p < 0.000000000000001';
+  box.classList.remove('hidden-val');
+  box.classList.add('shown-val');
+  document.getElementById('chi2-reveal-btn').style.display = 'none';
+}
+
+/* ================================================================
+   CHART: BAR CHART (Slide 12)
+   ================================================================ */
+const barData = [
+  {tapa:'Ambulanssi', count:256},
+  {tapa:'Auto', count:319},
+  {tapa:'Kävellen', count:170},
+  {tapa:'Muu', count:55}
+];
+const barTotal = 800;
+
+function drawBarChart(mode) {
+  const container = document.getElementById('barchart');
+  container.innerHTML = '';
+  const W = Math.min(860, container.clientWidth || 860), H = 320;
+  const ml=65,mr=20,mt=20,mb=50;
+  const iw=W-ml-mr, ih=H-mt-mb;
+
+  const isPct = mode === 'pct';
+  const data = barData.map(d => ({...d, value: isPct ? d.count/barTotal*100 : d.count}));
+  const yMax = d3.max(data, d => d.value) * 1.12;
+
+  const svg = d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g = svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  const x = d3.scaleBand().domain(data.map(d=>d.tapa)).range([0,iw]).padding(0.35);
+  const y = d3.scaleLinear().domain([0,yMax]).range([ih,0]);
+
+  // Grid lines
+  g.selectAll('.grid').data(y.ticks(5)).join('line')
+    .attr('x1',0).attr('x2',iw).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','rgba(255,255,255,0.06)');
+
+  // Bars with animation
+  const bars = g.selectAll('rect').data(data).join('rect')
+    .attr('x', d=>x(d.tapa))
+    .attr('width', x.bandwidth())
+    .attr('y', ih)
+    .attr('height', 0)
+    .attr('fill','#1B4F8A')
+    .attr('rx', 4);
+
+  bars.transition().duration(700).ease(d3.easeCubicOut)
+    .attr('y', d=>y(d.value))
+    .attr('height', d=>ih-y(d.value));
+
+  // Value labels
+  g.selectAll('.val-label').data(data).join('text')
+    .attr('x', d=>x(d.tapa)+x.bandwidth()/2)
+    .attr('y', d=>y(d.value)-8)
+    .attr('text-anchor','middle')
+    .attr('fill','#94a3b8').attr('font-size',13).attr('font-weight',600)
+    .text(d => isPct ? d.value.toFixed(1)+' %' : d.value);
+
+  // Axes
+  g.append('g').attr('transform',`translate(0,${ih})`)
+    .call(d3.axisBottom(x).tickSize(0)).selectAll('text').attr('fill','#cbd5e1').attr('font-size',13);
+  g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d => isPct ? d+'%' : d))
+    .selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+}
+
+/* ================================================================
+   CHART: STACKED BAR (Slide 13)
+   ================================================================ */
+const stackData = [
+  {esi:'ESI 1', osasto:8, koti:0},
+  {esi:'ESI 2', osasto:95, koti:111},
+  {esi:'ESI 3', osasto:97, koti:196},
+  {esi:'ESI 4', osasto:25, koti:220},
+  {esi:'ESI 5', osasto:2, koti:46}
+];
+
+function drawStackBar(mode) {
+  const container = document.getElementById('stackbar');
+  container.innerHTML = '';
+  const W = Math.min(860, container.clientWidth || 860), H = 340;
+  const ml=65,mr=20,mt=20,mb=50;
+  const iw=W-ml-mr, ih=H-mt-mb;
+
+  const isPct = mode === 'pct';
+  const data = stackData.map(d => {
+    const total = d.osasto+d.koti;
+    return {
+      esi: d.esi,
+      osasto: isPct ? (total?d.osasto/total*100:0) : d.osasto,
+      koti: isPct ? (total?d.koti/total*100:0) : d.koti,
+      total: isPct ? 100 : total
+    };
+  });
+
+  const svg = d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g = svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  const x = d3.scaleBand().domain(data.map(d=>d.esi)).range([0,iw]).padding(0.3);
+  const yMax = isPct ? 100 : d3.max(data, d=>d.total)*1.05;
+  const y = d3.scaleLinear().domain([0,yMax]).range([ih,0]);
+
+  // Grid
+  g.selectAll('.grid').data(y.ticks(5)).join('line')
+    .attr('x1',0).attr('x2',iw).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','rgba(255,255,255,0.06)');
+
+  // Stacked bars
+  data.forEach(d => {
+    // Osastohoito (bottom)
+    g.append('rect')
+      .attr('x',x(d.esi)).attr('width',x.bandwidth())
+      .attr('y',ih).attr('height',0)
+      .attr('fill','#1B4F8A').attr('rx',0)
+      .transition().duration(700).ease(d3.easeCubicOut)
+      .attr('y',y(d.osasto+d.koti)).attr('height',ih-y(d.osasto));
+
+    // Kotiutus (top, stacked on osasto)
+    if (d.koti > 0) {
+      g.append('rect')
+        .attr('x',x(d.esi)).attr('width',x.bandwidth())
+        .attr('y',ih).attr('height',0)
+        .attr('fill','#0D9488').attr('rx',0)
+        .transition().duration(700).ease(d3.easeCubicOut)
+        .attr('y',y(d.osasto+d.koti) + (ih-y(d.osasto)))
+        .attr('height', ih-y(d.koti));
+    }
+  });
+
+  // Axes
+  g.append('g').attr('transform',`translate(0,${ih})`)
+    .call(d3.axisBottom(x).tickSize(0)).selectAll('text').attr('fill','#cbd5e1').attr('font-size',12);
+  g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d => isPct ? d+'%' : d))
+    .selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+
+  // Legend
+  const leg = svg.append('g').attr('transform',`translate(${ml+iw-180},${mt-5})`);
+  [{label:'Osastohoito',color:'#1B4F8A'},{label:'Kotiutus',color:'#0D9488'}].forEach((item,i) => {
+    leg.append('rect').attr('x',i*100).attr('y',0).attr('width',12).attr('height',12).attr('fill',item.color).attr('rx',2);
+    leg.append('text').attr('x',i*100+16).attr('y',10).attr('fill','#94a3b8').attr('font-size',11).text(item.label);
+  });
+}
+
+/* ================================================================
+   CHART: BOX ANATOMY (Slide 14)
+   ================================================================ */
+const heights = [140,143,150,152,154,155,157,158,159,160,161,161,162,163,164,164,165,165,166,166,167,167,168,168,168,169,169,170,170,170,170,170,171,171,171,172,172,173,173,174,174,175,175,175,176,176,177,178,179,180,181,182,184,186,188,190,192,194,197,204];
+
+function drawBoxAnatomy(step) {
+  const container = document.getElementById('boxanat');
+  container.innerHTML = '';
+  const n=60;
+  const medIdx=29, q1Idx=14, q3Idx=44;
+  const med=170, q1=164, q3=176;
+  const wLoIdx=2, wHiIdx=57;
+  const outlierIdx=new Set([0,1,58,59]);
+
+  const W = Math.min(950, container.clientWidth || 950), H = 380;
+  const ml=10,mr=10,mt=8,mb=90;
+  const iw=W-ml-mr, ih=H-mt-mb;
+  const baseY=mt+ih;
+  const figW=iw/n;
+  const hScale=d3.scaleLinear().domain([135,210]).range([22,ih-5]);
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},0)`);
+
+  const gray='#6b7280', blue='#1B4F8A', teal='#0D9488', lightGray='#9ca3af', red='#e11d48';
+  const fx=i=>i*figW+figW/2;
+
+  heights.forEach((h,i) => {
+    let color=gray;
+    if(step>=1 && i===medIdx) color=blue;
+    if(step>=2 && (i===q1Idx||i===q3Idx)) color=teal;
+    if(step>=2 && i>q1Idx && i<q3Idx && i!==medIdx) color=lightGray;
+    if(step>=2 && (i<q1Idx||i>q3Idx) && !outlierIdx.has(i)) color='#555';
+    if(step>=4 && outlierIdx.has(i)) color=red;
+
+    const cx=fx(i);
+    const pH=hScale(h);
+    const headR=2.5, headY=baseY-pH, neckY=headY+headR;
+    const torsoEnd=baseY-pH*0.35;
+
+    g.append('circle').attr('cx',cx).attr('cy',headY).attr('r',headR).attr('fill',color);
+    g.append('line').attr('x1',cx).attr('y1',neckY).attr('x2',cx).attr('y2',torsoEnd)
+      .attr('stroke',color).attr('stroke-width',1.5).attr('stroke-linecap','round');
+    g.append('line').attr('x1',cx).attr('y1',torsoEnd).attr('x2',cx-3.5).attr('y2',baseY)
+      .attr('stroke',color).attr('stroke-width',1.2).attr('stroke-linecap','round');
+    g.append('line').attr('x1',cx).attr('y1',torsoEnd).attr('x2',cx+3.5).attr('y2',baseY)
+      .attr('stroke',color).attr('stroke-width',1.2).attr('stroke-linecap','round');
+
+    if(step>=4 && outlierIdx.has(i)){
+      g.append('text').attr('x',cx).attr('y',headY-7)
+        .attr('text-anchor','middle').attr('font-size',8).attr('fill',red).attr('font-weight','bold')
+        .text(h+' cm');
+    }
+  });
+
+  const bpY=baseY+65;
+
+  // Step 1+: Median
+  if(step>=1){
+    g.append('text').attr('x',fx(medIdx)).attr('y',baseY+16)
+      .attr('text-anchor','middle').attr('font-size',10).attr('fill',blue).attr('font-weight','bold')
+      .text('Mediaani = '+med+' cm');
+    g.append('text').attr('x',fx(medIdx)).attr('y',baseY+27)
+      .attr('text-anchor','middle').attr('font-size',9).attr('fill',blue)
+      .text('('+(medIdx+1)+'. henkilö)');
+    g.append('line').attr('x1',fx(medIdx)).attr('x2',fx(medIdx))
+      .attr('y1',bpY-10).attr('y2',bpY+10).attr('stroke',blue).attr('stroke-width',2.5);
+  }
+
+  // Step 2+: Quartiles + box
+  if(step>=2){
+    g.append('text').attr('x',fx(q1Idx)).attr('y',baseY+16)
+      .attr('text-anchor','end').attr('font-size',9.5).attr('fill',teal).attr('font-weight','bold')
+      .text('25 % = '+q1+' cm');
+    g.append('text').attr('x',fx(q1Idx)).attr('y',baseY+27)
+      .attr('text-anchor','end').attr('font-size',8.5).attr('fill',teal)
+      .text('('+(q1Idx+1)+'. henkilö)');
+    g.append('text').attr('x',fx(q3Idx)).attr('y',baseY+16)
+      .attr('text-anchor','start').attr('font-size',9.5).attr('fill',teal).attr('font-weight','bold')
+      .text('75 % = '+q3+' cm');
+    g.append('text').attr('x',fx(q3Idx)).attr('y',baseY+27)
+      .attr('text-anchor','start').attr('font-size',8.5).attr('fill',teal)
+      .text('('+(q3Idx+1)+'. henkilö)');
+
+    const boxL=fx(q1Idx)-figW/2, boxR=fx(q3Idx)+figW/2;
+    g.append('rect').attr('x',boxL).attr('y',bpY-10)
+      .attr('width',boxR-boxL).attr('height',20)
+      .attr('fill','rgba(27,79,138,0.12)').attr('stroke','rgba(255,255,255,0.5)').attr('stroke-width',1.5);
+    g.append('line').attr('x1',fx(medIdx)).attr('x2',fx(medIdx))
+      .attr('y1',bpY-10).attr('y2',bpY+10).attr('stroke',blue).attr('stroke-width',2.5);
+  }
+
+  // Step 3+: Whiskers
+  if(step>=3){
+    const boxL=fx(q1Idx)-figW/2, boxR=fx(q3Idx)+figW/2;
+    g.append('line').attr('x1',fx(wLoIdx)).attr('x2',boxL)
+      .attr('y1',bpY).attr('y2',bpY).attr('stroke','rgba(255,255,255,0.5)').attr('stroke-width',1.5);
+    g.append('line').attr('x1',fx(wLoIdx)).attr('x2',fx(wLoIdx))
+      .attr('y1',bpY-7).attr('y2',bpY+7).attr('stroke','rgba(255,255,255,0.5)').attr('stroke-width',1.5);
+    g.append('line').attr('x1',boxR).attr('x2',fx(wHiIdx))
+      .attr('y1',bpY).attr('y2',bpY).attr('stroke','rgba(255,255,255,0.5)').attr('stroke-width',1.5);
+    g.append('line').attr('x1',fx(wHiIdx)).attr('x2',fx(wHiIdx))
+      .attr('y1',bpY-7).attr('y2',bpY+7).attr('stroke','rgba(255,255,255,0.5)').attr('stroke-width',1.5);
+    g.append('text').attr('x',fx(wLoIdx)).attr('y',bpY+20)
+      .attr('text-anchor','middle').attr('font-size',8).attr('fill','#94a3b8')
+      .text(heights[wLoIdx]+' cm');
+    g.append('text').attr('x',fx(wHiIdx)).attr('y',bpY+20)
+      .attr('text-anchor','middle').attr('font-size',8).attr('fill','#94a3b8')
+      .text(heights[wHiIdx]+' cm');
+  }
+
+  // Step 4+: Outliers
+  if(step>=4){
+    g.append('circle').attr('cx',fx(0)).attr('cy',bpY).attr('r',3.5)
+      .attr('fill','none').attr('stroke',red).attr('stroke-width',1.5);
+    g.append('text').attr('x',fx(0)).attr('y',bpY+20)
+      .attr('text-anchor','middle').attr('font-size',8).attr('fill',red).text(heights[0]+' cm');
+
+    g.append('circle').attr('cx',fx(1)).attr('cy',bpY).attr('r',3.5)
+      .attr('fill','none').attr('stroke',red).attr('stroke-width',1.5);
+    g.append('text').attr('x',fx(1)).attr('y',bpY-16)
+      .attr('text-anchor','middle').attr('font-size',8).attr('fill',red).text(heights[1]+' cm');
+
+    g.append('circle').attr('cx',fx(58)).attr('cy',bpY).attr('r',3.5)
+      .attr('fill','none').attr('stroke',red).attr('stroke-width',1.5);
+    g.append('text').attr('x',fx(58)).attr('y',bpY-16)
+      .attr('text-anchor','middle').attr('font-size',8).attr('fill',red).text(heights[58]+' cm');
+
+    g.append('circle').attr('cx',fx(59)).attr('cy',bpY).attr('r',3.5)
+      .attr('fill','none').attr('stroke',red).attr('stroke-width',1.5);
+    g.append('text').attr('x',fx(59)).attr('y',bpY+20)
+      .attr('text-anchor','middle').attr('font-size',8).attr('fill',red).text(heights[59]+' cm');
+  }
+}
+
+/* ================================================================
+   CHART: BOXPLOT - VARIABLE x ARRIVAL MODE (Slide 15)
+   ================================================================ */
+const boxVarStats = {
+  ika: {
+    Ambulanssi:{q1:42,med:61,q3:78,n:256},
+    Auto:{q1:30,med:45,q3:63,n:319},
+    'Kävellen':{q1:27,med:38,q3:52,n:170},
+    Muu:{q1:28,med:46,q3:64,n:55}
+  },
+  syke: {
+    Ambulanssi:{q1:72,med:84,q3:98,n:256},
+    Auto:{q1:72,med:83,q3:96,n:319},
+    'Kävellen':{q1:74,med:84,q3:96,n:170},
+    Muu:{q1:74,med:86,q3:99,n:55}
+  },
+  systolinen: {
+    Ambulanssi:{q1:118,med:134,q3:152,n:256},
+    Auto:{q1:118,med:132,q3:148,n:319},
+    'Kävellen':{q1:116,med:130,q3:145,n:170},
+    Muu:{q1:115,med:132,q3:148,n:55}
+  },
+  hengitystaajuus: {
+    Ambulanssi:{q1:16,med:18,q3:20,n:256},
+    Auto:{q1:16,med:18,q3:20,n:319},
+    'Kävellen':{q1:16,med:18,q3:20,n:170},
+    Muu:{q1:16,med:18,q3:20,n:55}
+  }
+};
+const boxVarLabels = {ika:'Ikä (v)',syke:'Syke (bpm)',systolinen:'Syst. verenpaine (mmHg)',hengitystaajuus:'Hengitystaajuus (/min)'};
+const boxVarGroups = ['Ambulanssi','Auto','Kävellen','Muu'];
+const boxVarColors = ['#1B4F8A','#0D9488','#7C3AED','#D97706'];
+
+function drawBoxVar(varName) {
+  const container = document.getElementById('boxvar');
+  container.innerHTML = '';
+  const stats = boxVarStats[varName];
+
+  const W = Math.min(820, container.clientWidth || 820), H = 300;
+  const ml=110,mr=30,mt=15,mb=40;
+  const iw=W-ml-mr, ih=H-mt-mb;
+
+  // Find range
+  let allMin=Infinity, allMax=-Infinity;
+  boxVarGroups.forEach(grp => {
+    const s = stats[grp];
+    const iqr = s.q3 - s.q1;
+    const wLo = Math.max(s.q1-1.5*iqr, varName==='ika'?18:varName==='syke'?40:varName==='systolinen'?60:8);
+    const wHi = s.q3+1.5*iqr;
+    if(wLo<allMin) allMin=wLo;
+    if(wHi>allMax) allMax=wHi;
+  });
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  const xScale=d3.scaleLinear().domain([allMin-2,allMax+2]).nice().range([0,iw]);
+  const boxH=28;
+  const spacing=ih/(boxVarGroups.length+1);
+
+  // Grid
+  g.selectAll('.grid').data(xScale.ticks(8)).join('line')
+    .attr('x1',d=>xScale(d)).attr('x2',d=>xScale(d))
+    .attr('y1',0).attr('y2',ih)
+    .attr('stroke','rgba(255,255,255,0.04)');
+
+  // X axis
+  g.append('g').attr('transform',`translate(0,${ih})`)
+    .call(d3.axisBottom(xScale).ticks(8))
+    .selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('text').attr('x',iw/2).attr('y',ih+32)
+    .attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').text(boxVarLabels[varName]);
+
+  boxVarGroups.forEach((grp,i) => {
+    const y = spacing*(i+1);
+    const s = stats[grp];
+    const c = boxVarColors[i];
+    const iqr = s.q3-s.q1;
+    const wLo = Math.max(s.q1-1.5*iqr, allMin);
+    const wHi = Math.min(s.q3+1.5*iqr, allMax+2);
+
+    // Label
+    g.append('text').attr('x',-10).attr('y',y+4)
+      .attr('text-anchor','end').attr('font-size',12).attr('fill',c).attr('font-weight',600).text(grp);
+    g.append('text').attr('x',-10).attr('y',y+16)
+      .attr('text-anchor','end').attr('font-size',9).attr('fill','#64748b').text('n='+s.n);
+
+    // Whisker lines
+    g.append('line').attr('x1',xScale(wLo)).attr('x2',xScale(s.q1))
+      .attr('y1',y).attr('y2',y).attr('stroke',c).attr('stroke-width',1.5);
+    g.append('line').attr('x1',xScale(s.q3)).attr('x2',xScale(wHi))
+      .attr('y1',y).attr('y2',y).attr('stroke',c).attr('stroke-width',1.5);
+
+    // Whisker caps
+    [wLo,wHi].forEach(v => {
+      g.append('line').attr('x1',xScale(v)).attr('x2',xScale(v))
+        .attr('y1',y-boxH/3).attr('y2',y+boxH/3)
+        .attr('stroke',c).attr('stroke-width',1.5);
+    });
+
+    // Box
+    g.append('rect').attr('x',xScale(s.q1)).attr('y',y-boxH/2)
+      .attr('width',Math.max(1,xScale(s.q3)-xScale(s.q1))).attr('height',boxH)
+      .attr('fill',c).attr('fill-opacity',0.15).attr('stroke',c).attr('stroke-width',1.5).attr('rx',3);
+
+    // Median
+    g.append('line').attr('x1',xScale(s.med)).attr('x2',xScale(s.med))
+      .attr('y1',y-boxH/2).attr('y2',y+boxH/2)
+      .attr('stroke',c).attr('stroke-width',2.5);
+  });
+
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+}
+
+/* ================================================================
+   CHART: HISTOGRAM — AGE (Slide 16)
+   ================================================================ */
+// Generate ages with PRNG
+const ageRng = prng(2026);
+const ageData = [];
+for(let i=0;i<800;i++){
+  // Mixed distribution: 30% young adults (18-35), 40% middle-aged (35-70), 30% elderly (65-100)
+  const u = ageRng();
+  let age;
+  if(u<0.30) age = 18+Math.floor(ageRng()*18);
+  else if(u<0.70) age = 35+Math.floor(ageRng()*35);
+  else age = 55+Math.floor(ageRng()*45);
+  ageData.push(Math.min(100, Math.max(18, age)));
+}
+
+function drawHistAge(numBins) {
+  const container = document.getElementById('hist-age');
+  container.innerHTML = '';
+  const W = Math.min(860, container.clientWidth || 860), H = 290;
+  const ml=55,mr=15,mt=20,mb=40;
+  const iw=W-ml-mr, ih=H-mt-mb;
+
+  const xMin=15, xMax=105;
+  const x = d3.scaleLinear().domain([xMin,xMax]).range([0,iw]);
+  const thresholds = d3.range(xMin, xMax, (xMax-xMin)/numBins);
+  const bins = d3.bin().domain([xMin,xMax]).thresholds(thresholds)(ageData);
+  const yMax = d3.max(bins, b=>b.length)*1.1;
+  const y = d3.scaleLinear().domain([0,yMax]).range([ih,0]);
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  // Grid
+  g.selectAll('.grid').data(y.ticks(5)).join('line')
+    .attr('x1',0).attr('x2',iw).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','rgba(255,255,255,0.06)');
+
+  // Bars
+  g.selectAll('rect').data(bins).join('rect')
+    .attr('x',d=>x(d.x0)+0.5)
+    .attr('y', ih).attr('height', 0)
+    .attr('width',d=>Math.max(0,x(d.x1)-x(d.x0)-1))
+    .attr('fill','#1B4F8A').attr('opacity',0.85).attr('rx',1)
+    .transition().duration(500).ease(d3.easeCubicOut)
+    .attr('y',d=>y(d.length)).attr('height',d=>ih-y(d.length));
+
+  g.append('g').attr('transform',`translate(0,${ih})`)
+    .call(d3.axisBottom(x).ticks(10)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('g').call(d3.axisLeft(y).ticks(6))
+    .selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('text').attr('x',iw/2).attr('y',ih+35).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').text('Ikä (v)');
+  g.append('text').attr('x',-ih/2).attr('y',-42).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').attr('transform','rotate(-90)').text('Lukumäärä');
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+}
+
+/* ================================================================
+   CHART: HISTOGRAM — NORMAL (Slide 17)
+   ================================================================ */
+function drawHistNormal() {
+  const container = document.getElementById('hist-normal');
+  container.innerHTML = '';
+  const rng=prng(55);
+  const data=Array.from({length:300},()=>Math.round(randN(rng,170,8)));
+  const mn=meanFn(data), md=medianFn(data);
+
+  const W=Math.min(860, container.clientWidth||860), H=310;
+  const ml=55,mr=15,mt=30,mb=40;
+  const iw=W-ml-mr, ih=H-mt-mb;
+  const binW=3;
+  const xMin=140, xMax=205;
+  const thresholds=d3.range(xMin,xMax+binW,binW);
+  const bins=d3.bin().domain([xMin,xMax]).thresholds(thresholds)(data);
+  const yMax=d3.max(bins,b=>b.length);
+  const x=d3.scaleLinear().domain([xMin,xMax]).range([0,iw]);
+  const y=d3.scaleLinear().domain([0,yMax*1.15]).range([ih,0]);
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  // Grid
+  g.selectAll('.grid').data(y.ticks(5)).join('line')
+    .attr('x1',0).attr('x2',iw).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','rgba(255,255,255,0.06)');
+
+  // Bars
+  g.selectAll('rect').data(bins).join('rect')
+    .attr('x',d=>x(d.x0)+0.5)
+    .attr('y',ih).attr('height',0)
+    .attr('width',d=>Math.max(0,x(d.x1)-x(d.x0)-1))
+    .attr('fill','#1B4F8A').attr('opacity',0.8).attr('rx',1)
+    .transition().duration(700).ease(d3.easeCubicOut)
+    .attr('y',d=>y(d.length)).attr('height',d=>ih-y(d.length));
+
+  // Gaussian
+  const mu=170, sigma=8;
+  const gauss=d3.range(xMin,xMax,0.5).map(xv=>{
+    const pdf=Math.exp(-0.5*((xv-mu)/sigma)**2)/(sigma*Math.sqrt(2*Math.PI));
+    return{xv,yv:pdf*data.length*binW};
+  });
+  g.append('path').datum(gauss)
+    .attr('d',d3.line().x(d=>x(d.xv)).y(d=>y(d.yv)).curve(d3.curveBasis))
+    .attr('fill','none').attr('stroke','#e11d48').attr('stroke-width',2.5).attr('opacity',0.7);
+
+  // Axes
+  g.append('g').attr('transform',`translate(0,${ih})`).call(d3.axisBottom(x).ticks(10)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('g').call(d3.axisLeft(y).ticks(6)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('text').attr('x',iw/2).attr('y',ih+35).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').text('Pituus (cm)');
+  g.append('text').attr('x',-ih/2).attr('y',-42).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').attr('transform','rotate(-90)').text('Lukumäärä');
+
+  // Median line (solid blue)
+  g.append('line').attr('x1',x(md)).attr('x2',x(md)).attr('y1',0).attr('y2',ih)
+    .attr('stroke','#1B4F8A').attr('stroke-width',2.5);
+  g.append('rect').attr('x',x(md)-30).attr('y',-24).attr('width',60).attr('height',18).attr('fill','#1B4F8A').attr('rx',4);
+  g.append('text').attr('x',x(md)).attr('y',-11).attr('text-anchor','middle').attr('fill','#fff')
+    .attr('font-size',10).attr('font-weight',600).text('Md '+md.toFixed(0));
+
+  // Mean line (dashed teal)
+  const mxOff=Math.abs(x(mn)-x(md))<66?20:0;
+  g.append('line').attr('x1',x(mn)).attr('x2',x(mn)).attr('y1',0).attr('y2',ih)
+    .attr('stroke','#0D9488').attr('stroke-width',2.5).attr('stroke-dasharray','6 4');
+  g.append('rect').attr('x',x(mn)-30).attr('y',-24+mxOff).attr('width',60).attr('height',18).attr('fill','#0D9488').attr('rx',4);
+  g.append('text').attr('x',x(mn)).attr('y',-11+mxOff).attr('text-anchor','middle').attr('fill','#fff')
+    .attr('font-size',10).attr('font-weight',600).text('x\u0304 '+mn.toFixed(0));
+
+  // Gaussian label
+  g.append('text').attr('x',x(192)).attr('y',y(gauss.find(d=>d.xv>=190)?.yv||0)-10)
+    .attr('text-anchor','start').attr('fill','#e11d48').attr('font-size',11).attr('font-style','italic')
+    .text('Gaussin käyrä');
+
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+}
+
+/* ================================================================
+   CHART: HISTOGRAM — BIMODAL (Slide 18)
+   ================================================================ */
+function drawHistBimodal() {
+  const container = document.getElementById('hist-bimodal');
+  container.innerHTML = '';
+  const rng=prng(23);
+  const raw=[];
+  for(let i=0;i<200;i++) raw.push(Math.round(randN(rng,70,8)));
+  for(let i=0;i<140;i++) raw.push(Math.round(randN(rng,120,10)));
+  const data=raw.filter(v=>v>40&&v<180);
+  const mn=meanFn(data), md=medianFn(data);
+
+  const W=Math.min(860, container.clientWidth||860), H=310;
+  const ml=55,mr=15,mt=30,mb=40;
+  const iw=W-ml-mr, ih=H-mt-mb;
+  const xMin=40,xMax=160;
+  const thresholds=d3.range(xMin,xMax+3,3);
+  const bins=d3.bin().domain([xMin,xMax]).thresholds(thresholds)(data);
+  const yMax=d3.max(bins,b=>b.length);
+  const x=d3.scaleLinear().domain([xMin,xMax]).range([0,iw]);
+  const y=d3.scaleLinear().domain([0,yMax*1.15]).range([ih,0]);
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  g.selectAll('.grid').data(y.ticks(5)).join('line')
+    .attr('x1',0).attr('x2',iw).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','rgba(255,255,255,0.06)');
+
+  g.selectAll('rect').data(bins).join('rect')
+    .attr('x',d=>x(d.x0)+0.5)
+    .attr('y',ih).attr('height',0)
+    .attr('width',d=>Math.max(0,x(d.x1)-x(d.x0)-1))
+    .attr('fill','#7C3AED').attr('opacity',0.8).attr('rx',1)
+    .transition().duration(700).ease(d3.easeCubicOut)
+    .attr('y',d=>y(d.length)).attr('height',d=>ih-y(d.length));
+
+  g.append('g').attr('transform',`translate(0,${ih})`).call(d3.axisBottom(x).ticks(10)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('g').call(d3.axisLeft(y).ticks(6)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('text').attr('x',iw/2).attr('y',ih+35).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').text('Syke (/min)');
+  g.append('text').attr('x',-ih/2).attr('y',-42).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').attr('transform','rotate(-90)').text('Lukumäärä');
+
+  // Peak labels
+  g.append('text').attr('x',x(62)).attr('y',ih*0.12)
+    .attr('text-anchor','middle').attr('fill','#a78bfa').attr('font-style','italic').attr('font-size',12).attr('font-weight',500)
+    .text('Huippu 1: levossa');
+  g.append('text').attr('x',x(125)).attr('y',ih*0.18)
+    .attr('text-anchor','middle').attr('fill','#a78bfa').attr('font-style','italic').attr('font-size',12).attr('font-weight',500)
+    .text('Huippu 2: kiihtyneet');
+
+  // Median
+  g.append('line').attr('x1',x(md)).attr('x2',x(md)).attr('y1',0).attr('y2',ih)
+    .attr('stroke','#1B4F8A').attr('stroke-width',2.5);
+  g.append('rect').attr('x',x(md)-30).attr('y',-24).attr('width',60).attr('height',18).attr('fill','#1B4F8A').attr('rx',4);
+  g.append('text').attr('x',x(md)).attr('y',-11).attr('text-anchor','middle').attr('fill','#fff')
+    .attr('font-size',10).attr('font-weight',600).text('Md '+md.toFixed(0));
+
+  // Mean
+  const mxOff=Math.abs(x(mn)-x(md))<66?20:0;
+  g.append('line').attr('x1',x(mn)).attr('x2',x(mn)).attr('y1',0).attr('y2',ih)
+    .attr('stroke','#0D9488').attr('stroke-width',2.5).attr('stroke-dasharray','6 4');
+  g.append('rect').attr('x',x(mn)-30).attr('y',-24+mxOff).attr('width',60).attr('height',18).attr('fill','#0D9488').attr('rx',4);
+  g.append('text').attr('x',x(mn)).attr('y',-11+mxOff).attr('text-anchor','middle').attr('fill','#fff')
+    .attr('font-size',10).attr('font-weight',600).text('x\u0304 '+mn.toFixed(0));
+
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+}
+
+/* ================================================================
+   CHART: HISTOGRAM — MISSING VALUES (Slide 19)
+   ================================================================ */
+function drawHistMissing() {
+  const container = document.getElementById('hist-missing');
+  container.innerHTML = '';
+  const rng=prng(31);
+  const data=[];
+  for(let i=0;i<175;i++) data.push(Math.round(randN(rng,134,19)));
+  for(let i=0;i<25;i++) data.push(999);
+  const filtered=data.filter(v=>v>60);
+
+  const W=Math.min(860, container.clientWidth||860), H=310;
+  const ml=55,mr=15,mt=30,mb=40;
+  const iw=W-ml-mr, ih=H-mt-mb;
+  const xMin=60,xMax=1020;
+  const thresholds=d3.range(xMin,xMax+10,10);
+  const bins=d3.bin().domain([xMin,xMax]).thresholds(thresholds)(filtered);
+  const yMax=d3.max(bins,b=>b.length);
+  const x=d3.scaleLinear().domain([xMin,xMax]).range([0,iw]);
+  const y=d3.scaleLinear().domain([0,yMax*1.15]).range([ih,0]);
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  g.selectAll('.grid').data(y.ticks(5)).join('line')
+    .attr('x1',0).attr('x2',iw).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','rgba(255,255,255,0.06)');
+
+  g.selectAll('rect').data(bins).join('rect')
+    .attr('x',d=>x(d.x0)+0.5)
+    .attr('y',ih).attr('height',0)
+    .attr('width',d=>Math.max(0,x(d.x1)-x(d.x0)-1))
+    .attr('fill',d=>d.x0>=990?'#DC2626':'#1B4F8A').attr('opacity',0.85).attr('rx',1)
+    .transition().duration(700).ease(d3.easeCubicOut)
+    .attr('y',d=>y(d.length)).attr('height',d=>ih-y(d.length));
+
+  g.append('g').attr('transform',`translate(0,${ih})`)
+    .call(d3.axisBottom(x).tickValues([100,200,300,400,500,600,700,800,900,999]))
+    .selectAll('text').attr('fill','#94a3b8').attr('font-size',10);
+  g.append('g').call(d3.axisLeft(y).ticks(6)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('text').attr('x',iw/2).attr('y',ih+35).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').text('Systolinen verenpaine (mmHg)');
+  g.append('text').attr('x',-ih/2).attr('y',-42).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').attr('transform','rotate(-90)').text('Lukumäärä');
+
+  // Red warning
+  g.append('text').attr('x',x(980)).attr('y',ih*0.08)
+    .attr('text-anchor','end').attr('fill','#DC2626').attr('font-style','italic').attr('font-size',14).attr('font-weight',600)
+    .text('Mikä tämä on?');
+
+  g.append('text').attr('x',x(134)).attr('y',-14)
+    .attr('text-anchor','middle').attr('fill','#64748b').attr('font-style','italic').attr('font-size',11)
+    .text('Normaalit verenpaineet');
+
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+}
+
+/* ================================================================
+   CHART: HISTOGRAM — SKEWED (Slide 20)
+   ================================================================ */
+// Persistent skewed data array
+const skewedDataPersist = [];
+{
+  const rng=prng(42);
+  for(let i=0;i<200;i++) skewedDataPersist.push(Math.max(1,Math.exp(randN(rng,1.8,0.7))));
+  const rng2=prng(77);
+  for(let i=0;i<15;i++) skewedDataPersist.push(40+Math.abs(randN(rng2,60,30)));
+  skewedDataPersist.push(175,180,180);
+}
+
+// Add individual button handler
+document.getElementById('skewed-add-btn').addEventListener('click', function() {
+  const val = parseFloat(document.getElementById('skewed-add-value').value);
+  if(!isNaN(val) && val >= 1 && val <= 500) {
+    skewedDataPersist.push(val);
+    drawHistSkewed();
+  }
+});
+
+function drawHistSkewed() {
+  const container = document.getElementById('hist-skewed');
+  container.innerHTML = '';
+  const data = skewedDataPersist;
+  const mn=meanFn(data), md=medianFn(data);
+  document.getElementById('skewed-n-count').textContent = 'N = ' + data.length;
+
+  const W=Math.min(860, container.clientWidth||860), H=310;
+  const ml=55,mr=15,mt=30,mb=40;
+  const iw=W-ml-mr, ih=H-mt-mb;
+  const xMin=0, xMax=Math.max(200, Math.ceil(d3.max(data)/10)*10+10);
+  const thresholds=d3.range(xMin,xMax+5,5);
+  const bins=d3.bin().domain([xMin,xMax]).thresholds(thresholds)(data);
+  const yMax=d3.max(bins,b=>b.length);
+  const x=d3.scaleLinear().domain([xMin,xMax]).range([0,iw]);
+  const y=d3.scaleLinear().domain([0,yMax*1.15]).range([ih,0]);
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  g.selectAll('.grid').data(y.ticks(5)).join('line')
+    .attr('x1',0).attr('x2',iw).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','rgba(255,255,255,0.06)');
+
+  g.selectAll('rect').data(bins).join('rect')
+    .attr('x',d=>x(d.x0)+0.5)
+    .attr('y',ih).attr('height',0)
+    .attr('width',d=>Math.max(0,x(d.x1)-x(d.x0)-1))
+    .attr('fill',d=>d.x0>=170?'#DC2626':'#0D9488').attr('opacity',0.85).attr('rx',1)
+    .transition().duration(700).ease(d3.easeCubicOut)
+    .attr('y',d=>y(d.length)).attr('height',d=>ih-y(d.length));
+
+  g.append('g').attr('transform',`translate(0,${ih})`).call(d3.axisBottom(x).ticks(10)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('g').call(d3.axisLeft(y).ticks(6)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('text').attr('x',iw/2).attr('y',ih+35).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').text('Vasteaika (min)');
+  g.append('text').attr('x',-ih/2).attr('y',-42).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').attr('transform','rotate(-90)').text('Lukumäärä');
+
+  // Median
+  g.append('line').attr('x1',x(md)).attr('x2',x(md)).attr('y1',0).attr('y2',ih)
+    .attr('stroke','#1B4F8A').attr('stroke-width',2.5);
+  g.append('rect').attr('x',x(md)-36).attr('y',-24).attr('width',72).attr('height',18).attr('fill','#1B4F8A').attr('rx',4);
+  g.append('text').attr('x',x(md)).attr('y',-11).attr('text-anchor','middle').attr('fill','#fff')
+    .attr('font-size',10).attr('font-weight',600).text('Md '+md.toFixed(1)+' min');
+
+  // Mean
+  g.append('line').attr('x1',x(mn)).attr('x2',x(mn)).attr('y1',0).attr('y2',ih)
+    .attr('stroke','#0D9488').attr('stroke-width',2.5).attr('stroke-dasharray','6 4');
+  g.append('rect').attr('x',x(mn)-36).attr('y',-24).attr('width',72).attr('height',18).attr('fill','#0D9488').attr('rx',4);
+  g.append('text').attr('x',x(mn)).attr('y',-11).attr('text-anchor','middle').attr('fill','#fff')
+    .attr('font-size',10).attr('font-weight',600).text('x\u0304 '+mn.toFixed(1)+' min');
+
+  // Arrow annotation
+  g.append('text').attr('x',x(mn)+5).attr('y',10)
+    .attr('fill','#0D9488').attr('font-size',11).attr('font-style','italic')
+    .text('\u2190 Keskiarvo vetäytyy häntää kohti');
+
+  // Outlier annotation
+  const outBin = bins.find(b=>b.x0>=175);
+  if(outBin && outBin.length>0){
+    g.append('text').attr('x',x(180)).attr('y',y(outBin.length)-12)
+      .attr('text-anchor','middle').attr('fill','#DC2626').attr('font-size',11).attr('font-weight',600)
+      .text('3 \u00D7 180 min');
+  }
+
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+}
+
+/* ================================================================
+   CHART: SCATTER PLOT (Slide 21)
+   ================================================================ */
+// Generate ~200 representative data points
+const scatterRng = prng(99);
+const scatterData = [];
+const esiLevels = [1,2,3,4,5];
+const saapumistapas = ['Ambulanssi','Auto','Kävellen','Muu'];
+for(let i=0;i<200;i++){
+  const isAdmit = scatterRng() < 0.35;
+  const age = isAdmit
+    ? Math.round(Math.max(18,Math.min(100,randN(scatterRng,62,18))))
+    : Math.round(Math.max(18,Math.min(100,randN(scatterRng,42,16))));
+  const sbp = Math.round(Math.max(80,Math.min(220, age*0.5 + randN(scatterRng,100,18))));
+  const u = scatterRng();
+  let esi;
+  if(isAdmit){ esi = u<0.03?1:u<0.35?2:u<0.7?3:u<0.92?4:5; }
+  else { esi = u<0.01?1:u<0.15?2:u<0.45?3:u<0.85?4:5; }
+  const su = scatterRng();
+  const saapumistapa = su<0.32?'Ambulanssi':su<0.72?'Auto':su<0.93?'Kävellen':'Muu';
+  scatterData.push({
+    ika: age,
+    systolinen: sbp,
+    jatkotoimenpide: isAdmit?'Osastohoito':'Kotiutus',
+    esi: esi,
+    saapumistapa: saapumistapa
+  });
+}
+
+function drawScatter() {
+  const container = document.getElementById('scatter');
+  container.innerHTML = '';
+  const colorVar = document.getElementById('scatter-color-select').value;
+  const showReg = document.getElementById('scatter-reg-toggle').classList.contains('on');
+
+  const W = Math.min(820, container.clientWidth||820), H = 360;
+  const ml=60,mr=20,mt=20,mb=45;
+  const iw=W-ml-mr, ih=H-mt-mb;
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  const x=d3.scaleLinear().domain([15,105]).range([0,iw]);
+  const y=d3.scaleLinear().domain([70,230]).range([ih,0]);
+
+  // Grid
+  g.selectAll('.gridx').data(x.ticks(8)).join('line')
+    .attr('x1',d=>x(d)).attr('x2',d=>x(d)).attr('y1',0).attr('y2',ih)
+    .attr('stroke','rgba(255,255,255,0.04)');
+  g.selectAll('.gridy').data(y.ticks(6)).join('line')
+    .attr('x1',0).attr('x2',iw).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','rgba(255,255,255,0.04)');
+
+  // Color mapping
+  let colorMap, colorLabels;
+  if(colorVar==='jatkotoimenpide'){
+    colorMap = {'Osastohoito':'#1B4F8A','Kotiutus':'#0D9488'};
+    colorLabels = ['Osastohoito','Kotiutus'];
+  } else if(colorVar==='esi'){
+    colorMap = {'1':'#DC2626','2':'#f97316','3':'#eab308','4':'#0D9488','5':'#1B4F8A'};
+    colorLabels = ['ESI 1','ESI 2','ESI 3','ESI 4','ESI 5'];
+  } else {
+    colorMap = {'Ambulanssi':'#1B4F8A','Auto':'#0D9488','Kävellen':'#7C3AED','Muu':'#D97706'};
+    colorLabels = ['Ambulanssi','Auto','Kävellen','Muu'];
+  }
+
+  function getColor(d){
+    if(colorVar==='jatkotoimenpide') return colorMap[d.jatkotoimenpide];
+    if(colorVar==='esi') return colorMap[String(d.esi)];
+    return colorMap[d.saapumistapa];
+  }
+
+  function getGroup(d){
+    if(colorVar==='jatkotoimenpide') return d.jatkotoimenpide;
+    if(colorVar==='esi') return String(d.esi);
+    return d.saapumistapa;
+  }
+
+  // Regression lines per group
+  if(showReg) {
+    const groups = {};
+    scatterData.forEach(d => {
+      const key = getGroup(d);
+      if(!groups[key]) groups[key]=[];
+      groups[key].push(d);
+    });
+    Object.entries(groups).forEach(([key,pts]) => {
+      const n2=pts.length;
+      const sumX=pts.reduce((s,d)=>s+d.ika,0);
+      const sumY=pts.reduce((s,d)=>s+d.systolinen,0);
+      const sumXY=pts.reduce((s,d)=>s+d.ika*d.systolinen,0);
+      const sumX2=pts.reduce((s,d)=>s+d.ika*d.ika,0);
+      const slope=(n2*sumXY-sumX*sumY)/(n2*sumX2-sumX*sumX);
+      const intercept=(sumY-slope*sumX)/n2;
+      const x1=18,x2=100;
+      const c = colorVar==='esi'?colorMap[key]:colorMap[key];
+      g.append('line')
+        .attr('x1',x(x1)).attr('y1',y(slope*x1+intercept))
+        .attr('x2',x(x2)).attr('y2',y(slope*x2+intercept))
+        .attr('stroke',c||'#fff').attr('stroke-width',2).attr('opacity',0.7);
+    });
+  }
+
+  // Dots
+  g.selectAll('circle').data(scatterData).join('circle')
+    .attr('cx',d=>x(d.ika)).attr('cy',d=>y(d.systolinen))
+    .attr('r',0)
+    .attr('fill',d=>getColor(d)).attr('opacity',0.55)
+    .transition().duration(600).ease(d3.easeCubicOut)
+    .attr('r',4);
+
+  // Axes
+  g.append('g').attr('transform',`translate(0,${ih})`)
+    .call(d3.axisBottom(x).ticks(8)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('g').call(d3.axisLeft(y).ticks(6)).selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+  g.append('text').attr('x',iw/2).attr('y',ih+38).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').text('Ikä (v)');
+  g.append('text').attr('x',-ih/2).attr('y',-45).attr('text-anchor','middle').attr('font-size',12).attr('fill','#94a3b8').attr('transform','rotate(-90)').text('Syst. verenpaine (mmHg)');
+
+  // Legend
+  const leg=svg.append('g').attr('transform',`translate(${ml+iw-20},${mt+5})`);
+  colorLabels.forEach((label,i) => {
+    const colorKey = colorVar==='esi'?String(i+1):label;
+    leg.append('circle').attr('cx',-10).attr('cy',i*18).attr('r',5).attr('fill',colorMap[colorKey]||'#fff');
+    leg.append('text').attr('x',0).attr('y',i*18+4).attr('fill','#94a3b8').attr('font-size',10).text(label);
+  });
+
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+}
+
+/* ================================================================
+   CHART: OUTCOME STACKED 100% (Slide 22)
+   ================================================================ */
+const outcomeData = {
+  esi: {
+    labels: ['ESI 1','ESI 2','ESI 3','ESI 4','ESI 5'],
+    osasto: [8,95,97,25,2],
+    koti: [0,111,196,220,46]
+  },
+  saapumistapa: {
+    labels: ['Ambulanssi','Auto','Kävellen','Muu'],
+    osasto: [134,80,26,12],
+    koti: [122,239,144,43]
+  },
+  sukupuoli: {
+    labels: ['Mies','Nainen'],
+    osasto: [140,112],
+    koti: [280,268]
+  },
+  viikonpaiva: {
+    labels: ['Ma','Ti','Ke','To','Pe','La','Su'],
+    osasto: [38,34,36,35,37,36,36],
+    koti: [78,82,80,78,76,80,78]
+  }
+};
+
+function drawOutcome(group) {
+  const container = document.getElementById('outcome');
+  container.innerHTML = '';
+  const d = outcomeData[group];
+  if(!d) return;
+
+  const W = Math.min(860, container.clientWidth||860), H = 320;
+  const ml=90,mr=20,mt=20,mb=50;
+  const iw=W-ml-mr, ih=H-mt-mb;
+
+  const svg=d3.select(container).append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+  const g=svg.append('g').attr('transform',`translate(${ml},${mt})`);
+
+  const y=d3.scaleBand().domain(d.labels).range([0,ih]).padding(0.3);
+  const x=d3.scaleLinear().domain([0,100]).range([0,iw]);
+
+  // Grid
+  [25,50,75,100].forEach(v => {
+    g.append('line').attr('x1',x(v)).attr('x2',x(v)).attr('y1',0).attr('y2',ih)
+      .attr('stroke','rgba(255,255,255,0.06)');
+  });
+
+  d.labels.forEach((label,i) => {
+    const total = d.osasto[i]+d.koti[i];
+    const pctO = total?d.osasto[i]/total*100:0;
+    const pctK = total?d.koti[i]/total*100:0;
+
+    // Osastohoito
+    g.append('rect')
+      .attr('x',0).attr('y',y(label))
+      .attr('width',0).attr('height',y.bandwidth())
+      .attr('fill','#1B4F8A').attr('rx',3)
+      .transition().duration(700).ease(d3.easeCubicOut)
+      .attr('width',x(pctO));
+
+    // Kotiutus
+    g.append('rect')
+      .attr('x',x(pctO)).attr('y',y(label))
+      .attr('width',0).attr('height',y.bandwidth())
+      .attr('fill','#0D9488').attr('rx',0)
+      .transition().duration(700).ease(d3.easeCubicOut)
+      .attr('width',x(pctK));
+
+    // Percentage labels
+    if(pctO>8){
+      g.append('text').attr('x',x(pctO/2)).attr('y',y(label)+y.bandwidth()/2+4)
+        .attr('text-anchor','middle').attr('fill','#fff').attr('font-size',11).attr('font-weight',600)
+        .text(pctO.toFixed(0)+'%');
+    }
+    if(pctK>8){
+      g.append('text').attr('x',x(pctO)+x(pctK/2)).attr('y',y(label)+y.bandwidth()/2+4)
+        .attr('text-anchor','middle').attr('fill','#fff').attr('font-size',11).attr('font-weight',600)
+        .text(pctK.toFixed(0)+'%');
+    }
+  });
+
+  // Y axis labels
+  g.append('g').call(d3.axisLeft(y).tickSize(0))
+    .selectAll('text').attr('fill','#cbd5e1').attr('font-size',12);
+  g.append('g').attr('transform',`translate(0,${ih})`)
+    .call(d3.axisBottom(x).ticks(5).tickFormat(d=>d+'%'))
+    .selectAll('text').attr('fill','#94a3b8').attr('font-size',11);
+
+  g.selectAll('.domain').attr('stroke','rgba(255,255,255,0.15)');
+  g.selectAll('.tick line').attr('stroke','rgba(255,255,255,0.1)');
+
+  // Legend
+  const leg=svg.append('g').attr('transform',`translate(${ml+iw-180},${mt-5})`);
+  [{label:'Osastohoito',color:'#1B4F8A'},{label:'Kotiutus',color:'#0D9488'}].forEach((item,i) => {
+    leg.append('rect').attr('x',i*100).attr('y',0).attr('width',12).attr('height',12).attr('fill',item.color).attr('rx',2);
+    leg.append('text').attr('x',i*100+16).attr('y',10).attr('fill','#94a3b8').attr('font-size',11).text(item.label);
+  });
+}
+
+/* ================================================================
+   REVEAL.JS INITIALIZATION
+   ================================================================ */
+const deck = new Reveal({
+  hash: true,
+  slideNumber: 'c/t',
+  transition: 'fade',
+  transitionSpeed: 'default',
+  backgroundTransition: 'fade',
+  center: true,
+  display: 'block',
+  width: 1050,
+  height: 700,
+  margin: 0.06,
+  minScale: 0.2,
+  maxScale: 2.0,
+  controls: true,
+  controlsLayout: 'bottom-right',
+  progress: false,
+  history: true
+});
+
+deck.initialize();
+
+/* ================================================================
+   DRAW CHARTS ON SLIDE CHANGE
+   ================================================================ */
+const chartDrawn = {};
+
+function drawChartForSlide(slideIndex) {
+  const key = 'slide-' + slideIndex;
+  // Only draw if not already drawn (but some charts redraw on control change)
+  switch(slideIndex) {
+    case 11: // bar chart
+      if(!chartDrawn[key]){ drawBarChart('count'); chartDrawn[key]=true; }
+      break;
+    case 12: // stacked bar
+      if(!chartDrawn[key]){ drawStackBar('pct'); chartDrawn[key]=true; }
+      break;
+    case 13: // box anatomy
+      if(!chartDrawn[key]){ drawBoxAnatomy(0); chartDrawn[key]=true; }
+      break;
+    case 14: // box var
+      if(!chartDrawn[key]){ drawBoxVar('ika'); chartDrawn[key]=true; }
+      break;
+    case 15: // hist age
+      if(!chartDrawn[key]){ drawHistAge(20); chartDrawn[key]=true; }
+      break;
+    case 16: // hist normal
+      if(!chartDrawn[key]){ drawHistNormal(); chartDrawn[key]=true; }
+      break;
+    case 17: // hist bimodal
+      if(!chartDrawn[key]){ drawHistBimodal(); chartDrawn[key]=true; }
+      break;
+    case 18: // hist missing
+      if(!chartDrawn[key]){ drawHistMissing(); chartDrawn[key]=true; }
+      break;
+    case 19: // hist skewed
+      if(!chartDrawn[key]){ drawHistSkewed(); chartDrawn[key]=true; }
+      break;
+    case 20: // scatter
+      if(!chartDrawn[key]){ drawScatter(); chartDrawn[key]=true; }
+      break;
+    case 21: // outcome
+      if(!chartDrawn[key]){ drawOutcome('esi'); chartDrawn[key]=true; }
+      break;
+  }
+}
+
+deck.on('slidechanged', event => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      drawChartForSlide(event.indexh);
+    });
+  });
+});
+
+// Draw current slide's chart on load
+deck.on('ready', event => {
+  requestAnimationFrame(() => {
+    drawChartForSlide(event.indexh);
+  });
+});
+</script>
+
+<button id="theme-toggle" onclick="document.querySelector('.reveal-viewport').classList.toggle('light-mode')" style="position:fixed;bottom:12px;left:12px;z-index:999;padding:6px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#94a3b8;font-size:13px;cursor:pointer;font-family:Inter,sans-serif;">&#9728;&#65039; / &#127769;</button>
+
+</body>
+</html>
